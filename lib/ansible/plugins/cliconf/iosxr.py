@@ -19,12 +19,23 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-import collections
+DOCUMENTATION = """
+---
+author: Ansible Networking Team
+cliconf: iosxr
+short_description: Use iosxr cliconf to run command on Cisco IOS XR platform
+description:
+  - This iosxr plugin provides low level abstraction apis for
+    sending and receiving CLI commands from Cisco IOS XR network devices.
+version_added: "2.4"
+"""
+
 import re
 import json
 
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
+from ansible.module_utils.common._collections_compat import Mapping
 from ansible.module_utils.connection import ConnectionError
 from ansible.module_utils.network.common.config import NetworkConfig, dumps
 from ansible.module_utils.network.common.utils import to_list
@@ -99,7 +110,7 @@ class Cliconf(CliconfBase):
             candidate = 'load {0}'.format(replace)
 
         for line in to_list(candidate):
-            if not isinstance(line, collections.Mapping):
+            if not isinstance(line, Mapping):
                 line = {'command': line}
             cmd = line['command']
             results.append(self.send_command(**line))
@@ -177,7 +188,7 @@ class Cliconf(CliconfBase):
             raise ValueError("'commands' value is required")
         responses = list()
         for cmd in to_list(commands):
-            if not isinstance(cmd, collections.Mapping):
+            if not isinstance(cmd, Mapping):
                 cmd = {'command': cmd}
 
             output = cmd.pop('output', None)
@@ -195,7 +206,7 @@ class Cliconf(CliconfBase):
                 try:
                     out = to_text(out, errors='surrogate_or_strict').strip()
                 except UnicodeError:
-                    raise ConnectionError(msg=u'Failed to decode output from %s: %s' % (cmd, to_text(out)))
+                    raise ConnectionError(message=u'Failed to decode output from %s: %s' % (cmd, to_text(out)))
 
                 try:
                     out = json.loads(out)
@@ -234,10 +245,8 @@ class Cliconf(CliconfBase):
         }
 
     def get_capabilities(self):
-        result = {}
-        result['rpc'] = self.get_base_rpc() + ['commit', 'discard_changes', 'get_diff', 'configure', 'exit']
-        result['network_api'] = 'cliconf'
-        result['device_info'] = self.get_device_info()
+        result = super(Cliconf, self).get_capabilities()
+        result['rpc'] += ['commit', 'discard_changes', 'get_diff', 'configure', 'exit']
         result['device_operations'] = self.get_device_operations()
         result.update(self.get_option_values())
         return json.dumps(result)

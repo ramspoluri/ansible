@@ -89,7 +89,7 @@ You will run into errors because Ansible reads name in this context as a keyword
         - { role: myrole, vars: {name: Justin, othervar: othervalue}, become: True}
 
 
-For a full list of keywords see ::ref::`Playbook Keywords`.
+For a full list of keywords see :ref:`playbook_keywords`.
 
 Migrating from with_X to loop
 -----------------------------
@@ -143,7 +143,7 @@ Ansible fact namespacing
 Ansible facts, which have historically been written to names like ``ansible_*``
 in the main facts namespace, have been placed in their own new namespace,
 ``ansible_facts.*`` For example, the fact ``ansible_distribution`` is now best
-queried through the variable structure ``ansible_facts.distribution``. 
+queried through the variable structure ``ansible_facts.distribution``.
 
 A new configuration variable, ``inject_facts_as_vars``, has been added to
 ansible.cfg. Its default setting, 'True', keeps the 2.4 behavior of facts
@@ -319,7 +319,7 @@ The deprecation warnings reflect this schedule. The task above, run in Ansible 2
    [DEPRECATION WARNING]: Param 'host' is deprecated. See the module docs for more information. This feature will be removed in version 2.9.
    Deprecation warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
 
-We recommend using the new connection types ``network_cli`` and ``netconf`` (see below), using standard Ansible connection properties, and setting those properties in inventory by group. As you update your playbooks and inventory files, you can easily make the change to ``become`` for privilege escalation (on platforms that support it). For more information, see the :ref:`using become with network modules<become-network>` guide and the :ref:`platform documentation<platform_options>`.
+We recommend using the new connection types ``network_cli`` and ``netconf`` (see below), using standard Ansible connection properties, and setting those properties in inventory by group. As you update your playbooks and inventory files, you can easily make the change to ``become`` for privilege escalation (on platforms that support it). For more information, see the :ref:`using become with network modules<become_network>` guide and the :ref:`platform documentation<platform_options>`.
 
 Adding persistent connection types ``network_cli`` and ``netconf``
 ------------------------------------------------------------------
@@ -389,4 +389,4 @@ If your module uses shared module utilities, you must update all references. For
    from ansible.module_utils.network.vyos.vyos import get_config, load_config
 
 
-See the module utilities developer guide see :ref:`appendix_module_utilities` for more information.
+See the module utilities developer guide see :ref:`developing_module_utilities` for more information.
